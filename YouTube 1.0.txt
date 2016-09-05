@@ -1,0 +1,265 @@
+package com.mrvl.jar;
+
+import com.android.uiautomator.core.UiObject;
+import com.android.uiautomator.core.UiObjectNotFoundException;
+import com.android.uiautomator.core.UiSelector;
+
+//import static org.junit.Assert.*;
+
+//import org.junit.Test;
+
+import com.android.uiautomator.testrunner.UiAutomatorTestCase;
+
+class Function extends UiAutomatorTestCase {
+	public static void Start_YouTube() throws Exception{
+		
+		String Start_YouTube_ShellCommand = "am start -W com.google.android.youtube.tv";
+		Runtime.getRuntime().exec(Start_YouTube_ShellCommand).waitFor();
+	}
+	
+	public static void ErrorHandling_googlestopped(){
+		//you may apply this each time you apply Logout_google_account()
+		//you may apply this each time you click add account
+		UiObject ErrorMessage01 = new UiObject(new UiSelector().
+				text("Unfortunately, Google Play Movies & TV has stopped."));
+		if(ErrorMessage01.exists()){
+			UiObject ErrorMessageBox_OK01 = new UiObject(new UiSelector()
+					.text("OK"));
+			try {
+				ErrorMessageBox_OK01.click();
+			} catch (UiObjectNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+	}
+	public static void ErrorHandling_YouTubestopped(){
+		//you may apply this each time you try to play the first show of Purchases
+		UiObject ErrorMessage02 = new UiObject(new UiSelector()
+				.text("Unfortunately, YouTube has stopped."));
+		if(ErrorMessage02.exists()){
+			UiObject ErrorMessageBox_Ok02 =new UiObject(new UiSelector()
+					.text("OK"));
+			try {
+				ErrorMessageBox_Ok02.click();
+			} catch (UiObjectNotFoundException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
+		}
+	}
+	public static void ErrorHandling_AnErrorOccured(){
+		//you may apply this each time you try to play the first show of Purchases
+		UiObject ErrorMessage03 = new UiObject(new UiSelector()
+				.text("An error occurred"));
+		if(ErrorMessage03.exists()){
+			UiObject ErrorMessageBox_ok03 = new UiObject(new UiSelector()
+					.text("OK"));
+			try {
+				ErrorMessageBox_ok03.click();
+			} catch (UiObjectNotFoundException e7) {
+				// TODO Auto-generated catch block
+				e7.printStackTrace();
+			}
+		}
+	}
+//	public static void ErrorHandling_AProblem(){
+//		//you may apply this each time you try to play the first show of Purchases
+//		//I suppose while we really buy a show,this error will never occur again
+//		UiObject ErrorMessage04 = new UiObject(new UiSelector()
+//				.text("There was a problem while playing"));
+//		if(ErrorMessage04.exists()){
+//			UiObject ErrorMessageBox_ok04 = new UiObject(new UiSelector()
+//					.text("OK"));
+//			try {
+//				ErrorMessageBox_ok04.click();
+//			} catch (UiObjectNotFoundException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		}
+//	}
+	public static void ErrorHandling_SettingStoppeds(){
+		//you may apply this each time you try to ckick when you logout
+		//google account
+		UiObject ErrorMessage05 = new UiObject(new UiSelector()
+				.text("Unfortunately, Settings has stopped."));
+		if(ErrorMessage05.exists()){
+			UiObject ErrorMessageBox_ok05 = new UiObject(new UiSelector()
+					.text("OK"));
+			try {
+				ErrorMessageBox_ok05.click();
+			} catch (UiObjectNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	public static void Logout_google_account()  throws UiObjectNotFoundException, Exception
+	 {
+		//after you logout,you may encounter an error saying
+		//"Unfortunately, Google Play Movies & TV has stopped.",
+		//so add the appropriate error handling to it.
+		String LogOut_ShellCommand = "am start -W com.android.tv.settings/.accounts.RemoveAccountDialog";
+		Runtime.getRuntime().exec(LogOut_ShellCommand).waitFor();
+    	UiObject Logout_OK = new UiObject(new UiSelector().text("OK"));
+    	//the resource id of "OK" and "cancel" are the same!
+    	Logout_OK.click();
+	}
+	public static void Login_google_account() throws UiObjectNotFoundException, InterruptedException, Exception{
+		Runtime.getRuntime().exec("input keyevent 3").waitFor();
+		String Login_add_ShellCommand = "am start "
+				+ "-W com.android.tv.settings/.accounts.AddAccountWithTypeActivity";
+		Runtime.getRuntime().exec(Login_add_ShellCommand).waitFor();
+		UiObject UsePwd = new UiObject(new UiSelector()
+				.text("USE YOUR PASSWORD"));
+		if(UsePwd.exists()){
+			UsePwd.click();
+		}
+//    	UiObject Login_OK = new UiObject(new UiSelector()
+//    			.text("OK"));
+//    	Login_OK.click();
+//    	UiObject Login_google_SignIn = new UiObject(new UiSelector()
+//    			.text("SIGN IN"));
+//    	Login_google_SignIn.click();
+//    	UiObject Login_google_Username = new UiObject(new UiSelector()
+//    			.resourceId("com.google.android.gsf.notouch:id/text_input"));
+//    	Login_google_Username.setText("marvellbb");
+    	Runtime.getRuntime().exec("input text marvellbb").waitFor();
+    	Runtime.getRuntime().exec("input keyevent 66").waitFor();
+//    	UiObject Login_google_Password = new UiObject(new UiSelector()
+//    			.resourceId("com.google.android.gsf.notouch:id/text_input"));
+//    	Login_google_Password.setText("asdfghjkl#");
+    	Runtime.getRuntime().exec("input text asdfghjkl#").waitFor();
+    	Runtime.getRuntime().exec("input keyevent 66").waitFor();
+    	UiObject YouTube = new UiObject(new UiSelector()
+    			.description("YouTube"));
+    	YouTube.waitForExists(9000);
+    	Runtime.getRuntime().exec("input keyevent 3").waitFor();
+	}
+	public static void KillProcessAndClearData() throws Exception{
+		//after you do this,you need to apply Check_update() before
+		//you apply Start_YouTube()
+		String KillProcessAndClearData_ShellCommand = "pm clear "
+				+ "com.google.android.youtube.tv";
+		Runtime.getRuntime().exec(KillProcessAndClearData_ShellCommand).waitFor();
+	}
+	public static void Check_update(){
+		//do this after you apply KillProcessAndClearData()
+		UiObject update_later = new UiObject(new UiSelector()
+				.text("Later"));
+		System.out.println("Check for YouTube update");
+		if(update_later.exists()){
+			try {
+				update_later.click();
+			} catch (UiObjectNotFoundException e3) {
+				// TODO Auto-generated catch block
+				e3.printStackTrace();
+			}
+		}
+	}
+//	public static void TryClickPurchases() throws InterruptedException{
+//		UiObject Purchases = new UiObject(new UiSelector().text("Purchases"));
+//		Thread.sleep(500);
+////		UiObject ErrorMessage04 = new UiObject(new UiSelector()
+////				.text("There was a problem while playing"));
+////		boolean flag04 = ErrorMessage04.exists();
+//		try {
+//			//funs.UiAutomationLog("Try to click the button Purchases");
+//			//funs.ShellCommmand_echo("echo Try to click the button Purchases");
+//			System.out.println("Try to click the button Purchases");
+//			Purchases.click();
+//			Thread.sleep(3000);
+//			Runtime.getRuntime().exec("input keyevent 22").waitFor();
+//			Runtime.getRuntime().exec("input keyevent 23").waitFor();
+//			
+//		} catch (Exception e6) {
+//			// TODO Auto-generated catch block
+//			e6.printStackTrace();
+//			//funs.UiAutomationLog("Error clicking the Purchases button");
+//			//funs.ShellCommmand_echo("echo Error clicking the Purchases button");
+//			System.out.println("Error clicking the Pruchases button");
+//		}
+//	
+//	}
+}
+
+public class TryYtb  extends UiAutomatorTestCase{
+	public void test() throws Exception {
+		System.out.println("This is YouTube play");
+		Runtime.getRuntime().exec("input keyevent 3").waitFor();
+		int i=0;
+		while(i<=5){
+			System.out.println("do some while loop");
+			Function.Start_YouTube();
+			System.out.println("Try to start YouTube");
+			Runtime.getRuntime().exec("input keyevent 21").waitFor();
+			System.out.println("Start YouTube");
+			Thread.sleep(1000);
+			Function.Check_update();
+			Runtime.getRuntime().exec("input keyevent 21").waitFor();
+			UiObject Purchases = new UiObject(new UiSelector().text("Purchases"));
+			boolean flag01 = Purchases.exists();
+			try {
+				System.out.println("Try to click the button Purchases");
+				Purchases.click();
+				Thread.sleep(3000);
+				Runtime.getRuntime().exec("input keyevent 22").waitFor();
+				Runtime.getRuntime().exec("input keyevent 23").waitFor();
+				
+			} catch (Exception e6) {
+				// TODO Auto-generated catch block
+				e6.printStackTrace();
+				System.out.println("Error clicking the Pruchases button");
+			}
+			UiObject ErrorMessage02 = new UiObject(new UiSelector()
+					.text("Unfortunately, YouTube has stopped."));
+			UiObject ErrorMessage03 = new UiObject(new UiSelector()
+					.text("An error occurred"));
+			boolean flag02 = ErrorMessage02.exists();
+			boolean flag03 = ErrorMessage03.exists();
+			System.out.println("Play the first show of Purchases");
+			if(flag01 == true && flag02 == false && flag03 == false){
+				System.out.println("OK,get rid of the loop");
+				break;
+			}
+			Function.ErrorHandling_YouTubestopped();
+			try {
+				Function.KillProcessAndClearData();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+				try {
+					Function.Logout_google_account();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				try {
+					Function.ErrorHandling_SettingStoppeds();
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			try {
+				Function.Login_google_account();
+			} catch (UiObjectNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			System.out.println("Failing to click the button Purchase,"
+					+ "clear data and logout and login");
+			i++;
+			System.out.println("Error locating the Pruchases button,try again");
+			System.out.println("Times for while loops :"+i);
+			if(i == 5){
+				System.out.println("Having tried several times");
+				break;
+			}
+		}
+	}
+}
